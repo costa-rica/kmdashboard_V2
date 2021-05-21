@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block title %} Home {% endblock %}
+{% block main %}
+<section class="home">
+    <div class="container">
+        <div class="home_label">
+            Welcome to the NHTSA Investigations Data Dashboard
+        </div>
+        <div class="select_page">
+            <a href="{{ url_for('main.search') }}">Search Investigations</a>
+            <br/>
+            <a href="{{ url_for('main.reports') }}">Reports</a>
+        </div>
+    </div>
+</section>
+
+
+{% endblock %}

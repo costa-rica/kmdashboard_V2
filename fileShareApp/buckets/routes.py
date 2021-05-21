@@ -31,9 +31,9 @@ buckets = Blueprint('buckets', __name__)
 
 
 
-@buckets.route("/home", methods=["GET","POST"])
+@buckets.route("/home_dashboard", methods=["GET","POST"])
 @login_required
-def home():
+def home_dashboard():
     print('*TOP OF def home()*')
     print('top of home - request.args:::',type(request.args),request.args)
     # print('request.args dictionary:::',request.args.to_dict())

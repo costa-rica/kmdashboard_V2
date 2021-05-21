@@ -24,7 +24,7 @@ users = Blueprint('users', __name__)
 @users.route("/register", methods=["GET","POST"])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('buckets.home'))
+        return redirect(url_for('main.home'))
     form= RegistrationForm()
     if request.method == 'POST':
         if form.validate_on_submit():
@@ -48,7 +48,7 @@ def register():
 def login():
     # print('***in login form****')
     if current_user.is_authenticated:
-        return redirect(url_for('buckets.home'))
+        return redirect(url_for('main.home'))
     form = LoginForm()
     if form.validate_on_submit():
         print('login - form.validate_on_submit worked')
@@ -56,7 +56,7 @@ def login():
         if user and bcrypt.check_password_hash(user.password,form.password.data):
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
-            return redirect(next_page) if next_page else redirect(url_for('buckets.home'))
+            return redirect(next_page) if next_page else redirect(url_for('main.home'))
             #^^^ another good thing turnary condition ^^^
         else:
             flash('Login unsuccessful', 'danger')
@@ -85,7 +85,7 @@ def account():
         currentUser.theme=request.form.get('darkTheme')
         db.session.commit()
         flash(f'Your account has been updated {current_user.email}!', 'success')
-        return redirect(url_for('buckets.home')) #CS says want a new redirect due to "post-get-redirect pattern"
+        return redirect(url_for('main.home')) #CS says want a new redirect due to "post-get-redirect pattern"
     #     post-get-redirect pattern is when browser asks are you sure you want to reload data.
     # It seems this is because the user will be running POst request on top of an existing post request
     elif request.method =='GET':
@@ -105,7 +105,7 @@ def account():
 @users.route('/reset_password', methods = ["GET", "POST"])
 def reset_password():
     if current_user.is_authenticated:
-        return redirect(url_for('buckets.home'))
+        return redirect(url_for('main.home'))
     form = RequestResetForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -117,7 +117,7 @@ def reset_password():
 @users.route('/reset_password/<token>', methods = ["GET", "POST"])
 def reset_token(token):
     if current_user.is_authenticated:
-        return redirect(url_for('buckets.home'))
+        return redirect(url_for('main.home'))
     user = User.verify_reset_token(token)
     if user is None:
         flash('That is an invalid or expired token', 'warning')
