@@ -26,34 +26,37 @@ def investigations_query_util(query_file_name):
         del search_criteria_dict["save_search_name"]
     if search_criteria_dict.get('save_query_button'):
         del search_criteria_dict['save_query_button']
+    if search_criteria_dict.get('search_limit'):
+        del search_criteria_dict['search_limit']
 
     for i,j in search_criteria_dict.items():
         if j[1]== "exact":
-            if i=='YEAR' and j[0]!='':
+            if i in ['id','YEAR'] and j[0]!='':
                 # j[0]=int(j[0])
                 investigations = investigations.filter(getattr(Investigations,i)==int(j[0]))
             elif i in ['ODATE','CDATE'] and j[0]!='':
-                j[0]=datetime.strptime(j[0],'%Y-%m-%d')
+                j[0]=datetime.strptime(j[0].strip(),'%Y-%m-%d')
                 investigations = investigations.filter(getattr(Investigations,i)==j[0])
             elif j[0]!='':
                 investigations = investigations.filter(getattr(Investigations,i)==j[0])
         elif j[1]== "less_than":
-            if i=='YEAR' and j[0]!='':
+            if i in ['id','YEAR'] and j[0]!='':
                 # j[0]=int(j[0])
                 investigations = investigations.filter(getattr(Investigations,i)<int(j[0]))
             elif i in ['ODATE','CDATE'] and j[0]!='':
-                j[0]=datetime.strptime(j[0],'%Y-%m-%d')
+                j[0]=datetime.strptime(j[0].strip(),'%Y-%m-%d')
                 investigations = investigations.filter(getattr(Investigations,i)<j[0])
         elif j[1]== "greater_than":
-            if i=='YEAR' and j[0]!='':
+            if i in ['id','YEAR'] and j[0]!='':
                 # j[0]=int(j[0])
                 investigations = investigations.filter(getattr(Investigations,i)>int(j[0]))
             elif i in ['ODATE','CDATE'] and j[0]!='':
-                j[0]=datetime.strptime(j[0],'%Y-%m-%d')
+                j[0]=datetime.strptime(j[0].strip(),'%Y-%m-%d')
                 investigations = investigations.filter(getattr(Investigations,i)>j[0])
         elif j[1] =="string_contains" and j[0]!='':
             investigations = investigations.filter(getattr(Investigations,i).contains(j[0]))
-    investigations=investigations.filter(getattr(Investigations,'YEAR')>2015).all()
+    # investigations=investigations.filter(getattr(Investigations,'YEAR')>2015).all()
+    investigations=investigations.all()
     print('investigations length:', len(investigations))
     return (investigations,search_criteria_dict)
 

@@ -208,6 +208,66 @@ section.EnterNewPasswordSection {
 
 /*Home*/
 
+/*Search*/
+section.search {
+    .container {
+        padding: 50px 10px 50px 5px;
+        background: rgb(190,190,190);
+        padding: 20px;
+        border-color:rgb(82, 82, 82);
+        border-style: solid;
+        border-radius: 1em;
+        width:85%;
+    }
+    .custom_search {
+        display: grid;
+        grid-template-columns: 20% 30% auto;
+    }
+    .custom_search div:nth-child(3n-2) {
+        justify-self: end;
+        padding-right: 2%;
+    }
+    .text_search_form {
+        width:100%;
+    }
+
+    .dict_search {
+        display: grid;
+        grid-template-columns: 20% 30% auto;
+    }
+    .dict_search div:nth-child(3n-2) {
+        justify-self: end;
+        padding-right: 2%;
+    }
+    .search_limit_form {
+        background: rgb(200,200,200);
+        padding-top: 1em;
+        padding-bottom: 1em;
+        padding-left:.2em;
+    }
+}
+
+
+.table_contents {
+    font-size: .7em;
+    background: rgb(190,190,190);
+    padding: 5px;
+    border-color:rgb(82, 82, 82);
+    border-style: solid;
+    border-radius: 1em;
+    
+    .td_characteristics {
+        height: 1.4em;
+        overflow:hidden;
+    }
+    .dash_id_button {
+        border-radius: .3em;
+        &:hover {
+            font-weight: bold;
+            background-color:rgb(82, 82, 82);
+        }
+    }
+}
 
 
 
@@ -363,63 +423,3 @@ section.dashboard {
     }
 }
 
-section.search {
-    .container {
-        padding: 50px 10px 50px 5px;
-        background: rgb(190,190,190);
-        padding: 20px;
-        border-color:rgb(82, 82, 82);
-        border-style: solid;
-        border-radius: 1em;
-        width:85%;
-    }
-    .custom_search {
-        display: grid;
-        grid-template-columns: 20% 30% auto;
-    }
-    .custom_search div:nth-child(3n-2) {
-        justify-self: end;
-        padding-right: 2%;
-
-        
-    }
-    .text_search_form {
-        
-        width:100%;
-
-    }
-
-    .dict_search {
-        display: grid;
-        grid-template-columns: 20% 30% auto;
-    }
-    .dict_search div:nth-child(3n-2) {
-        justify-self: end;
-        padding-right: 2%;
-    }
-
-
-    
-}
-
-
-.table_contents {
-    font-size: .7em;
-    background: rgb(190,190,190);
-    padding: 5px;
-    border-color:rgb(82, 82, 82);
-    border-style: solid;
-    border-radius: 1em;
-    
-    .td_characteristics {
-        height: 1.4em;
-        overflow:hidden;
-    }
-    .dash_id_button {
-        border-radius: .3em;
-        &:hover {
-            font-weight: bold;
-            background-color:rgb(82, 82, 82);
-        }
-    }
-}

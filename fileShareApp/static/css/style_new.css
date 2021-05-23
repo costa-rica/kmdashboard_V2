@@ -302,6 +302,77 @@ section.EnterNewPasswordSection .container .form-submit {
 }
 
 /*Home*/
+/*Search*/
+section.search .container {
+  padding: 50px 10px 50px 5px;
+  background: #bebebe;
+  padding: 20px;
+  border-color: #525252;
+  border-style: solid;
+  border-radius: 1em;
+  width: 85%;
+}
+
+section.search .custom_search {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 20% 30% auto;
+      grid-template-columns: 20% 30% auto;
+}
+
+section.search .custom_search div:nth-child(3n-2) {
+  -ms-grid-column-align: end;
+      justify-self: end;
+  padding-right: 2%;
+}
+
+section.search .text_search_form {
+  width: 100%;
+}
+
+section.search .dict_search {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 20% 30% auto;
+      grid-template-columns: 20% 30% auto;
+}
+
+section.search .dict_search div:nth-child(3n-2) {
+  -ms-grid-column-align: end;
+      justify-self: end;
+  padding-right: 2%;
+}
+
+section.search .search_limit_form {
+  background: #c8c8c8;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  padding-left: .2em;
+}
+
+.table_contents {
+  font-size: .7em;
+  background: #bebebe;
+  padding: 5px;
+  border-color: #525252;
+  border-style: solid;
+  border-radius: 1em;
+}
+
+.table_contents .td_characteristics {
+  height: 1.4em;
+  overflow: hidden;
+}
+
+.table_contents .dash_id_button {
+  border-radius: .3em;
+}
+
+.table_contents .dash_id_button:hover {
+  font-weight: bold;
+  background-color: #525252;
+}
+
 /*Home_dashboard*/
 section.dashboard h2 {
   margin: 20px 0 0 20px;
@@ -523,68 +594,5 @@ section.dashboard label {
           justify-content: flex-end;
   text-align: right;
   margin-bottom: 5px;
-}
-
-section.search .container {
-  padding: 50px 10px 50px 5px;
-  background: #bebebe;
-  padding: 20px;
-  border-color: #525252;
-  border-style: solid;
-  border-radius: 1em;
-  width: 85%;
-}
-
-section.search .custom_search {
-  display: -ms-grid;
-  display: grid;
-  -ms-grid-columns: 20% 30% auto;
-      grid-template-columns: 20% 30% auto;
-}
-
-section.search .custom_search div:nth-child(3n-2) {
-  -ms-grid-column-align: end;
-      justify-self: end;
-  padding-right: 2%;
-}
-
-section.search .text_search_form {
-  width: 100%;
-}
-
-section.search .dict_search {
-  display: -ms-grid;
-  display: grid;
-  -ms-grid-columns: 20% 30% auto;
-      grid-template-columns: 20% 30% auto;
-}
-
-section.search .dict_search div:nth-child(3n-2) {
-  -ms-grid-column-align: end;
-      justify-self: end;
-  padding-right: 2%;
-}
-
-.table_contents {
-  font-size: .7em;
-  background: #bebebe;
-  padding: 5px;
-  border-color: #525252;
-  border-style: solid;
-  border-radius: 1em;
-}
-
-.table_contents .td_characteristics {
-  height: 1.4em;
-  overflow: hidden;
-}
-
-.table_contents .dash_id_button {
-  border-radius: .3em;
-}
-
-.table_contents .dash_id_button:hover {
-  font-weight: bold;
-  background-color: #525252;
 }
 /*# sourceMappingURL=style_new.css.map */
