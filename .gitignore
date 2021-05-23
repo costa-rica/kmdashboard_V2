@@ -1,6 +1,3 @@
 __pycache__/
 *.ipynb
-fileShareApp/__pycache__/
-fileShareApp/buckets/__pycache__/
-fileShareApp/main/__pycache__/
-fileShareApp/users/__pycache__/
+
