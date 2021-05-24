@@ -48,7 +48,7 @@ class User(db.Model, UserMixin):
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title= db.Column(db.String(100), nullable=False)
-    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.now)
     content = db.Column(db.Text)
     screenshot = db.Column(db.String(100))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -71,7 +71,7 @@ class Investigations(db.Model):
     SUBJECT=db.Column(db.Text)
     SUMMARY=db.Column(db.Text)
     km_notes=db.Column(db.Text)
-    date_updated = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    date_updated = db.Column(db.DateTime, nullable=False, default=datetime.now)
     files = db.Column(db.Text)
     km_tracking_id = db.relationship('Kmtracking', backref='update_record', lazy=True)
 
@@ -86,7 +86,7 @@ class Kmtracking(db.Model):
     updated_from = db.Column(db.Text)
     updated_to = db.Column(db.Text)
     updated_by = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    time_stamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    time_stamp = db.Column(db.DateTime, nullable=False, default=datetime.now)
     investigations_table_id=db.Column(db.Integer, db.ForeignKey('investigations.id'), nullable=False)
     
     def __repr__(self):

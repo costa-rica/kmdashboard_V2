@@ -271,7 +271,7 @@ section.search {
 
 
 
-/*Home_dashboard*/
+/*Dashboard*/
 section.dashboard {
     
     h2 {
@@ -286,7 +286,11 @@ section.dashboard {
         border-radius: 1em;
         width:85%;
     }
-    
+    .above_dash {
+        display: flex;
+        justify-content: space-between;
+        padding-bottom:2em;
+    }    
   
 
     .investigation_entry_top {

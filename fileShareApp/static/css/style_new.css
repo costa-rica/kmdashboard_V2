@@ -373,7 +373,7 @@ section.search .search_limit_form {
   background-color: #525252;
 }
 
-/*Home_dashboard*/
+/*Dashboard*/
 section.dashboard h2 {
   margin: 20px 0 0 20px;
 }
@@ -386,6 +386,16 @@ section.dashboard .container {
   border-style: solid;
   border-radius: 1em;
   width: 85%;
+}
+
+section.dashboard .above_dash {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  padding-bottom: 2em;
 }
 
 section.dashboard .investigation_entry_top {

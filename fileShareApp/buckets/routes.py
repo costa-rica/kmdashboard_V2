@@ -218,20 +218,4 @@ def home_dashboard():
 
 
 
-@buckets.route("/delete_file/<inv_id_for_dash>/<filename>", methods=["GET","POST"])
-# @posts.route('/post/<post_id>/update', methods = ["GET", "POST"])
-@login_required
-def delete_file(inv_id_for_dash,filename):
-    dash_inv =db.session.query(Investigations).get(inv_id_for_dash)
-    print('delete_file route - dash_inv::::',dash_inv.files)
-    if (",") in dash_inv.files:
-        file_list=dash_inv.files.split(",")
-        file_list.remove(filename)
-        print('file_list::::', file_list)
-        dash_inv.files=str(file_list)
-    else:
-        dash_inv.files=''
-    db.session.commit()
-    flash('file has been deleted!', 'success')
-    return redirect(url_for('buckets.home', inv_id_for_dash=inv_id_for_dash))
         

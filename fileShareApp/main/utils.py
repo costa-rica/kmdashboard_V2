@@ -4,6 +4,7 @@ import os
 from flask import current_app
 import json
 from datetime import date, datetime
+from flask_login import current_user
 
 
 def queryToDict(query_data, column_names):
@@ -57,7 +58,10 @@ def investigations_query_util(query_file_name):
             investigations = investigations.filter(getattr(Investigations,i).contains(j[0]))
     # investigations=investigations.filter(getattr(Investigations,'YEAR')>2015).all()
     investigations=investigations.all()
-    print('investigations length:', len(investigations))
+    msg="""END investigations_query_util(query_file_name), returns investigations,
+search_criteria_dict. len(investigations) is 
+    """
+    print(msg, len(investigations), 'search_criteria_dict: ',search_criteria_dict)
     return (investigations,search_criteria_dict)
 
 
@@ -82,4 +86,74 @@ def search_criteria_dictionary_util(formDict):
     query_file_name='current_query.txt'
     with open(os.path.join(current_app.config['QUERIES_FOLDER'],query_file_name),'w') as dict_file:
         json.dump(search_query_dict,dict_file)
+    print('END search_criteria_dictionary_util(formDict), returns query_file_name')
     return query_file_name
+
+def updateInvestigation(dict, **kwargs):
+    date_flag=False
+    print('in updateInvestigation - dict:::',dict,'kwargs:::',kwargs)
+    formToDbCrosswalkDict = {'inv_number':'NHTSA_ACTION_NUMBER','inv_make':'MAKE',
+        'inv_model':'MODEL','inv_year':'YEAR','inv_compname':'COMPNAME',
+        'inv_mfr_name': 'MFR_NAME', 'inv_odate': 'ODATE', 'inv_cdate': 'CDATE',
+        'inv_campno':'CAMPNO','inv_subject': 'SUBJECT', 'inv_summary_textarea': 'SUMMARY',
+        'inv_km_notes_textarea': 'km_notes', 'investigation_file)': 'files'}
+
+    update_data = {formToDbCrosswalkDict.get(i): j for i,j in dict.items()}
+    existing_data = db.session.query(Investigations).get(kwargs.get('inv_id_for_dash'))
+    # Investigations_attr=['id','NHTSA_ACTION_NUMBER', 'MAKE', 'MODEL', 'YEAR', 'COMPNAME', 'MFR_NAME',
+        # 'ODATE','CDATE','CAMPNO','SUBJECT','SUMMARY','km_notes','date_updated','files','km_tracking_id']
+    Investigations_attr=['SUBJECT','SUMMARY','km_notes','date_updated','files']
+    at_least_one_field_changed = False
+    #loop over existing data attributes
+    print('update_data:::', update_data)
+    
+    for i in Investigations_attr:
+        if update_data.get(i):
+
+            if str(getattr(existing_data, i)) != update_data.get(i):
+                
+                print('This should get triggered when updateing summary')
+                at_least_one_field_changed = True
+                newTrack= Kmtracking(field_updated=i,updated_from=getattr(existing_data, i),
+                    updated_to=update_data.get(i), updated_by=current_user.id,
+                    investigations_table_id=kwargs.get('inv_id_for_dash'))
+                db.session.add(newTrack)
+                # print('added ',i,'==', update_data.get(i),' to KmTracker')
+                #Actually change database data here:
+                setattr(existing_data, i ,update_data.get(i))
+
+                # print('updated investigations table with ',i,'==', update_data.get(i))
+                db.session.commit()
+            else:
+                print(i, ' has no change')
+
+    if dict.get('verified_by_user'):
+        if any(current_user.email in s for s in kwargs.get('verified_by_list')):
+            print('do nothing')
+        # elif kwargs.get('verified_by_list') ==[] or any(current_user.email not in s for s in kwargs.get('verified_by_list')):
+        else:
+            print('user verified adding to Kmtracking table')
+            at_least_one_field_changed = True
+            newTrack=Kmtracking(field_updated='verified_by_user',
+                updated_to=current_user.email, updated_by=current_user.id,
+                investigations_table_id=kwargs.get('inv_id_for_dash'))
+            db.session.add(newTrack)
+            db.session.commit()
+    else:
+        print('no verified user added')
+        if any(current_user.email in s for s in kwargs.get('verified_by_list')):
+            db.session.query(Kmtracking).filter_by(investigations_table_id=kwargs.get('inv_id_for_dash'),
+                field_updated='verified_by_user',updated_to=current_user.email).delete()
+            db.session.commit()
+            
+    if at_least_one_field_changed:
+        print('at_least_one_field_changed::::',at_least_one_field_changed)
+        setattr(existing_data, 'date_updated' ,datetime.now())
+        db.session.commit()
+    if date_flag:
+        flash(date_flag, 'warning')
+    
+    print('end updateInvestigation util')
+        #if there is a corresponding update different from existing_data:
+        #1.add row to kmtracking datatable
+        #2.update existing_data with change       
