@@ -17,9 +17,12 @@ body {
         
     }
     
-    ul {
+    ul#nav_horizontal_list li {
         list-style-type: none;
         float: right;
+        display: inline;
+        padding-left:1em;
+
     }    
 }
 
@@ -342,6 +345,7 @@ section.dashboard {
         grid-template-rows: 1fr;
         grid-template-areas:
         "inv_files "
+        "km_categories"
         "inv_update"
         "inv_date_update";
     }
@@ -352,6 +356,7 @@ section.dashboard {
         justify-content: flex-start;
         height: 10em;
         padding-left: 20px;
+
         .file_input {
             padding: 10px 0 0 0;
         }
@@ -385,6 +390,27 @@ section.dashboard {
             right: -11px;
             }
     }
+    .km_categories{
+        grid-area: km_categories;
+        background: tan;
+        padding: .5em;
+        border-color:rgb(82, 82, 82);
+        border-style: solid;
+        border-radius: 1em;
+
+    }
+    .km_categories_checkboxes{
+        display: grid;
+        grid-template-columns: repeat(auto-fit,minmax(10rem, 1fr));
+    }
+    .checkbox_group {
+        display:flex;
+        
+    }
+    .checkbox_group > label {
+        text-align: left;
+    }
+
     .inv_update {
         grid-area: inv_update;
         justify-self: end;

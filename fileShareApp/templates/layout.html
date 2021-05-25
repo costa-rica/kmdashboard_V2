@@ -43,9 +43,13 @@
             <img id="mobile-cta" class="mobile-menu" src="../static/images/menu.svg" alt="Open Navigation">
             <nav>
                 
-                <ul>
+                <ul id="nav_horizontal_list">
                     {% if current_user.is_authenticated %}
                     <li><a href="{{ url_for('users.logout') }}">Logout</a></li>
+                    
+                    <li><a href="{{ url_for('main.reports') }}">Reports</a></li>
+                    <li><a href="{{ url_for('main.search') }}">Search</a></li>
+                    <li><a href="{{ url_for('main.home') }}">Home</a></li>
                     {% else %}
                     <li><a href="{{ url_for('users.login') }}">Login</a></li>
                     {% endif %}

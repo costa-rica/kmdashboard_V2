@@ -23,6 +23,7 @@ import openpyxl
 from werkzeug.utils import secure_filename
 import json
 import glob
+import shutil
 
 from fileShareApp.users.forms import RegistrationForm, LoginForm, UpdateAccountForm, \
     RequestResetForm, ResetPasswordForm
@@ -197,6 +198,8 @@ def dashboard():
     else:
         dash_inv_files=dash_inv.files.split(',')
     
+    
+    
     dash_inv_list = [dash_inv.NHTSA_ACTION_NUMBER,dash_inv.MAKE,dash_inv.MODEL,dash_inv.YEAR,
         dash_inv.ODATE.strftime("%Y-%m-%d"),dash_inv.CDATE.strftime("%Y-%m-%d"),dash_inv.CAMPNO,
         dash_inv.COMPNAME, dash_inv.MFR_NAME, dash_inv.SUBJECT, dash_inv.SUMMARY,
@@ -206,6 +209,20 @@ def dashboard():
     inv_entry_top_names_list=['NHTSA Action Number','Make','Model','Year','Open Date','Close Date',
         'Recall Campaign Number','Component Description','Manufacturer Name']
     inv_entry_top_list=zip(inv_entry_top_names_list,dash_inv_list[:9])
+    
+    #make list of checkboxes
+    
+    checkbox_list_count=5
+    checkbox_list=['checkbox_'+str(i) for i in range(0,checkbox_list_count)]
+    for i in checkbox_list:
+        if getattr(dash_inv, i)=='Yes':
+            dash_inv_list.append('checked')
+        else:
+            dash_inv_list.append('')
+    
+    #make list of text inputs
+    
+    #make list of text inputs and text input dropdowns
     
     
     if request.method == 'POST':
@@ -240,7 +257,8 @@ def dashboard():
         
     return render_template('dashboard.html',inv_entry_top_list=inv_entry_top_list,
         dash_inv_list=dash_inv_list, str=str, len=len, inv_id_for_dash=inv_id_for_dash,
-        verified_by_list=verified_by_list,checkbox_verified=checkbox_verified)
+        verified_by_list=verified_by_list,checkbox_verified=checkbox_verified, checkbox_list=checkbox_list,
+        int=int)
 
 
 
@@ -285,15 +303,35 @@ def delete_file(inv_id_for_dash,filename):
 @main.route("/reports", methods=["GET","POST"])
 @login_required
 def reports():
-    return "This is the reports page"
-
-
-    
+    return render_template('reports.html')
 
 
 
+@main.route("/files_zip", methods=["GET","POST"])
+@login_required
+def files_zip():
+    if os.path.exists(os.path.join(current_app.config['UTILITY_FILES_FOLDER'],'Investigation_files')):
+        os.remove(os.path.join(current_app.config['UTILITY_FILES_FOLDER'],'Investigation_files'))
+    shutil.make_archive(os.path.join(
+        current_app.config['UTILITY_FILES_FOLDER'],'Investigation_files'), "zip", os.path.join(
+        current_app.config['UPLOADED_FILES_FOLDER']))
+    return send_from_directory(os.path.join(
+        current_app.config['UTILITY_FILES_FOLDER']),'Investigation_files.zip', as_attachment=True)
 
 
+@main.route("/investigation_categories", methods=["GET","POST"])
+@login_required
+def investigation_categories():
+    # investigations = db.session.query(Investigations)
+    df = pd.read_sql_table('investigations', db.engine)
+    df_1=df[['id', 'NHTSA_ACTION_NUMBER', 'MAKE', 'MODEL', 'YEAR', 'COMPNAME',
+       'MFR_NAME', 'ODATE', 'CDATE', 'CAMPNO', 'SUBJECT', 'date_updated', 'files', 'checkbox_0', 'checkbox_1',
+       'checkbox_2', 'checkbox_3', 'checkbox_4', 'textbox_1', 'textbox_2',
+       'textbox_3', 'textbox_4']].copy()
+    df_1.to_excel(os.path.join(
+        current_app.config['UTILITY_FILES_FOLDER'],'investigation_categories_report.xlsx'))
+    return send_from_directory(os.path.join(
+        current_app.config['UTILITY_FILES_FOLDER']),'investigation_categories_report.xlsx', as_attachment=True)
 
 
 

@@ -12,3 +12,4 @@ class Config:
     UPLOADED_FILES_FOLDER = os.path.join(os.path.dirname(__file__), 'static/files')
     UTILITY_FILES_FOLDER = os.path.join(os.path.dirname(__file__), 'static/utility_files')
     QUERIES_FOLDER = os.path.join(os.path.dirname(__file__), 'static/queries')
+    

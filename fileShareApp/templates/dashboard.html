@@ -96,7 +96,6 @@
                     
                 </div>
 
-
                 <div class="verified_list">
                     {% for i in verified_by_list %}
                     <span> {{ i[0] }}</span> <span> {{ i[1] }}</span><br/>
@@ -105,6 +104,36 @@
                 {% endif %}
             </div>
 
+
+            <div class="km_categories">
+                <h4><u>Categories (sample)</u></h4>
+                <br/>
+                
+                <div class="km_categories_checkboxes">
+                    {% for i in checkbox_list %}
+                    <div class="checkbox_group">
+                        <input type="checkbox"  name="{{ i }}" id="{{ i }}" value="Yes" {{ dash_inv_list[14+int(i[-1:])] }}/>
+                        <label for="{{ i }}">{{ "checkbox " + i[-1:] }}</label>
+                    </div>
+
+                    {% endfor %}
+                </div>
+                <br/>
+                <h4>More categories...</h4>
+                <!--<div class="km_categories_dropdowns">
+                    Make
+                    <input type="text" class="text_input" name=""  list="makeList"
+                    value= "">
+                    <datalist id="makeList">
+                        {% for i in make_list %}
+                            <option></option>
+                        {% endfor %}
+                    </datalist>
+                </div>
+                -->
+
+
+            </div>
 
             <label class="inv_date_updated" >
                 <span class="span_text"> This investigation was updated last:  {{ dash_inv_list[12] }} </span>

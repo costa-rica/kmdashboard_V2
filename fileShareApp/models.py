@@ -65,8 +65,8 @@ class Investigations(db.Model):
     YEAR=db.Column(db.Integer)
     COMPNAME=db.Column(db.Text)
     MFR_NAME=db.Column(db.Text)
-    ODATE=db.Column(db.DateTime)
-    CDATE=db.Column(db.DateTime)
+    ODATE=db.Column(db.DateTime, nullable=True)
+    CDATE=db.Column(db.DateTime, nullable=True)
     CAMPNO=db.Column(db.String(9))
     SUBJECT=db.Column(db.Text)
     SUMMARY=db.Column(db.Text)
@@ -74,6 +74,15 @@ class Investigations(db.Model):
     date_updated = db.Column(db.DateTime, nullable=False, default=datetime.now)
     files = db.Column(db.Text)
     km_tracking_id = db.relationship('Kmtracking', backref='update_record', lazy=True)
+    checkbox_0=db.Column(db.String(10))
+    checkbox_1=db.Column(db.String(10))
+    checkbox_2=db.Column(db.String(10))
+    checkbox_3=db.Column(db.String(10))
+    checkbox_4=db.Column(db.String(10))
+    textbox_1=db.Column(db.String(100))
+    textbox_2=db.Column(db.String(100))
+    textbox_3=db.Column(db.String(100))
+    textbox_4=db.Column(db.String(100))
 
     def __repr__(self):
         return f"Sharedfile('{self.id}',NHTSA_ACTION_NUMBER:'{self.NHTSA_ACTION_NUMBER}'," \

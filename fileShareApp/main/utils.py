@@ -96,13 +96,14 @@ def updateInvestigation(dict, **kwargs):
         'inv_model':'MODEL','inv_year':'YEAR','inv_compname':'COMPNAME',
         'inv_mfr_name': 'MFR_NAME', 'inv_odate': 'ODATE', 'inv_cdate': 'CDATE',
         'inv_campno':'CAMPNO','inv_subject': 'SUBJECT', 'inv_summary_textarea': 'SUMMARY',
-        'inv_km_notes_textarea': 'km_notes', 'investigation_file)': 'files'}
+        'inv_km_notes_textarea': 'km_notes', 'investigation_file)': 'files',
+        'checkbox_0':'checkbox_0','checkbox_1':'checkbox_1','checkbox_2':'checkbox_2',
+        'checkbox_3':'checkbox_3','checkbox_4':'checkbox_4'}
 
     update_data = {formToDbCrosswalkDict.get(i): j for i,j in dict.items()}
     existing_data = db.session.query(Investigations).get(kwargs.get('inv_id_for_dash'))
-    # Investigations_attr=['id','NHTSA_ACTION_NUMBER', 'MAKE', 'MODEL', 'YEAR', 'COMPNAME', 'MFR_NAME',
-        # 'ODATE','CDATE','CAMPNO','SUBJECT','SUMMARY','km_notes','date_updated','files','km_tracking_id']
-    Investigations_attr=['SUBJECT','SUMMARY','km_notes','date_updated','files']
+    Investigations_attr=['SUBJECT','SUMMARY','km_notes','date_updated','files',
+        'checkbox_0', 'checkbox_1','checkbox_2','checkbox_3','checkbox_4']
     at_least_one_field_changed = False
     #loop over existing data attributes
     print('update_data:::', update_data)

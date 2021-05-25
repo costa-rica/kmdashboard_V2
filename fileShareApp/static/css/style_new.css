@@ -16,9 +16,11 @@ body {
   position: relative;
 }
 
-.navbar ul {
+.navbar ul#nav_horizontal_list li {
   list-style-type: none;
   float: right;
+  display: inline;
+  padding-left: 1em;
 }
 
 img.mobile-menu {
@@ -480,7 +482,7 @@ section.dashboard .investigation_entery_bottom {
   display: grid;
   -ms-grid-rows: 1fr;
       grid-template-rows: 1fr;
-      grid-template-areas: "inv_files " "inv_update" "inv_date_update";
+      grid-template-areas: "inv_files " "km_categories" "inv_update" "inv_date_update";
 }
 
 section.dashboard .inv_files {
@@ -538,8 +540,36 @@ section.dashboard .inv_files .remove-image:active {
   right: -11px;
 }
 
-section.dashboard .inv_update {
+section.dashboard .km_categories {
   -ms-grid-row: 2;
+  -ms-grid-column: 1;
+  grid-area: km_categories;
+  background: tan;
+  padding: .5em;
+  border-color: #525252;
+  border-style: solid;
+  border-radius: 1em;
+}
+
+section.dashboard .km_categories_checkboxes {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (minmax(10rem, 1fr))[auto-fit];
+      grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+}
+
+section.dashboard .checkbox_group {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+section.dashboard .checkbox_group > label {
+  text-align: left;
+}
+
+section.dashboard .inv_update {
+  -ms-grid-row: 3;
   -ms-grid-column: 1;
   grid-area: inv_update;
   justify-self: end;
@@ -576,7 +606,7 @@ section.dashboard .verify_box_and_label > input {
 }
 
 section.dashboard .inv_date_update {
-  -ms-grid-row: 3;
+  -ms-grid-row: 4;
   -ms-grid-column: 1;
   grid-area: inv_date_update;
   display: -webkit-box;
