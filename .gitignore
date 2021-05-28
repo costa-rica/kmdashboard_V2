@@ -3,3 +3,4 @@ __pycache__/
 fileShareApp/__pycache__/
 *.zip
 *.xlsx
+awsVmSockMethod/
