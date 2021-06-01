@@ -24,6 +24,7 @@ from werkzeug.utils import secure_filename
 import json
 import glob
 import shutil
+import logging
 
 from fileShareApp.users.forms import RegistrationForm, LoginForm, UpdateAccountForm, \
     RequestResetForm, ResetPasswordForm
@@ -322,16 +323,21 @@ def files_zip():
 @main.route("/investigation_categories", methods=["GET","POST"])
 @login_required
 def investigation_categories():
-    # investigations = db.session.query(Investigations)
+    print('Enter download utility')
+    current_app.logger.debug('this is a DEBUG message')
+    current_app.logger.info('this is an INFO message')
+    current_app.logger.warning('this is a WARNING message')
+    current_app.logger.error('this is an ERROR message')
+    current_app.logger.critical('this is a CRITICAL message')
     df = pd.read_sql_table('investigations', db.engine)
     df_1=df[['id', 'NHTSA_ACTION_NUMBER', 'MAKE', 'MODEL', 'YEAR', 'COMPNAME',
        'MFR_NAME', 'ODATE', 'CDATE', 'CAMPNO', 'SUBJECT', 'date_updated', 'files', 'checkbox_0', 'checkbox_1',
        'checkbox_2', 'checkbox_3', 'checkbox_4', 'textbox_1', 'textbox_2',
        'textbox_3', 'textbox_4']].copy()
-    df_1.to_excel(os.path.join(
-        current_app.config['UTILITY_FILES_FOLDER'],'investigation_categories_report.xlsx'))
+    df_1.to_csv(os.path.join(
+        current_app.config['UTILITY_FILES_FOLDER'],'investigation_categories_report.csv'))
     return send_from_directory(os.path.join(
-        current_app.config['UTILITY_FILES_FOLDER']),'investigation_categories_report.xlsx', as_attachment=True)
+        current_app.config['UTILITY_FILES_FOLDER']),'investigation_categories_report.csv', as_attachment=True)
 
 
 
