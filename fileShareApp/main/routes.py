@@ -311,11 +311,13 @@ def reports():
 @main.route("/files_zip", methods=["GET","POST"])
 @login_required
 def files_zip():
+    current_app.logger.info('Enter files download utility')
     if os.path.exists(os.path.join(current_app.config['UTILITY_FILES_FOLDER'],'Investigation_files')):
         os.remove(os.path.join(current_app.config['UTILITY_FILES_FOLDER'],'Investigation_files'))
     shutil.make_archive(os.path.join(
         current_app.config['UTILITY_FILES_FOLDER'],'Investigation_files'), "zip", os.path.join(
         current_app.config['UPLOADED_FILES_FOLDER']))
+    current_app.logger.info('succesfully downloaded files zip')
     return send_from_directory(os.path.join(
         current_app.config['UTILITY_FILES_FOLDER']),'Investigation_files.zip', as_attachment=True)
 
@@ -323,21 +325,38 @@ def files_zip():
 @main.route("/investigation_categories", methods=["GET","POST"])
 @login_required
 def investigation_categories():
-    print('Enter download utility')
-    current_app.logger.debug('this is a DEBUG message')
-    current_app.logger.info('this is an INFO message')
-    current_app.logger.warning('this is a WARNING message')
-    current_app.logger.error('this is an ERROR message')
-    current_app.logger.critical('this is a CRITICAL message')
-    df = pd.read_sql_table('investigations', db.engine)
-    df_1=df[['id', 'NHTSA_ACTION_NUMBER', 'MAKE', 'MODEL', 'YEAR', 'COMPNAME',
-       'MFR_NAME', 'ODATE', 'CDATE', 'CAMPNO', 'SUBJECT', 'date_updated', 'files', 'checkbox_0', 'checkbox_1',
-       'checkbox_2', 'checkbox_3', 'checkbox_4', 'textbox_1', 'textbox_2',
-       'textbox_3', 'textbox_4']].copy()
-    df_1.to_csv(os.path.join(
-        current_app.config['UTILITY_FILES_FOLDER'],'investigation_categories_report.csv'))
+    current_app.logger.info('Entered investigations download utility')
+    
+    excelObj=pd.ExcelWriter(os.path.join(
+        current_app.config['UTILITY_FILES_FOLDER'],'investigation_categories_report.xlsx'))
+
+    columnNames=Investigations.__table__.columns.keys()
+    colNamesDf=pd.DataFrame([columnNames],columns=columnNames)
+    colNamesDf.to_excel(excelObj,sheet_name='table', header=False, index=False)
+    
+    dbLength=len(Investigations.query.all())
+    add_limit=int(dbLength/5)
+    for i in range(0,5):
+        query=db.session.query(*[c for c in Investigations.__table__.c]).limit(add_limit).offset(i*add_limit).all()
+        queryDf = pd.DataFrame(query, columns=Investigations.__table__.columns.keys())
+        queryDf.to_excel(excelObj,sheet_name='table', header=False, index=False,startrow=1+(i*add_limit))
+
+    excelObj.close()
+    
+
+    
+    # df = pd.read_sql_table('investigations', db.engine)
+    # df_1=df[['id', 'NHTSA_ACTION_NUMBER', 'MAKE', 'MODEL', 'YEAR', 'COMPNAME',
+       # 'MFR_NAME', 'ODATE', 'CDATE', 'CAMPNO', 'SUBJECT', 'date_updated', 'files', 'checkbox_0', 'checkbox_1',
+       # 'checkbox_2', 'checkbox_3', 'checkbox_4', 'textbox_1', 'textbox_2',
+       # 'textbox_3', 'textbox_4']].copy()
+    # df_1.to_csv(os.path.join(
+        # current_app.config['UTILITY_FILES_FOLDER'],'investigation_categories_report.csv'))
+        
+        
+    current_app.logger.info('succesfully downloaded categories spreadsheet')
     return send_from_directory(os.path.join(
-        current_app.config['UTILITY_FILES_FOLDER']),'investigation_categories_report.csv', as_attachment=True)
+        current_app.config['UTILITY_FILES_FOLDER']),'investigation_categories_report.xlsx', as_attachment=True)
 
 
 

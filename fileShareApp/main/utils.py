@@ -148,13 +148,14 @@ def updateInvestigation(dict, **kwargs):
             db.session.commit()
             
     if at_least_one_field_changed:
-        print('at_least_one_field_changed::::',at_least_one_field_changed)
+        current_app.logger.info('End updateInvestigation util',at_least_one_field_changed)
+        # print('at_least_one_field_changed::::',at_least_one_field_changed)
         setattr(existing_data, 'date_updated' ,datetime.now())
         db.session.commit()
     if date_flag:
         flash(date_flag, 'warning')
-    
-    print('end updateInvestigation util')
+    current_app.logger.info('End updateInvestigation util')
+    # print('end updateInvestigation util')
         #if there is a corresponding update different from existing_data:
         #1.add row to kmtracking datatable
         #2.update existing_data with change       
