@@ -332,15 +332,19 @@ def investigation_categories():
 
     columnNames=Investigations.__table__.columns.keys()
     colNamesDf=pd.DataFrame([columnNames],columns=columnNames)
-    colNamesDf.to_excel(excelObj,sheet_name='table', header=False, index=False)
+    colNamesDf.to_excel(excelObj,sheet_name='Investigation Data', header=False, index=False)
     
-    dbLength=len(Investigations.query.all())
-    add_limit=int(dbLength/5)
-    for i in range(0,5):
-        query=db.session.query(*[c for c in Investigations.__table__.c]).limit(add_limit).offset(i*add_limit).all()
-        queryDf = pd.DataFrame(query, columns=Investigations.__table__.columns.keys())
-        queryDf.to_excel(excelObj,sheet_name='table', header=False, index=False,startrow=1+(i*add_limit))
 
+    queryDf = pd.read_sql_table('investigations', db.engine)
+    queryDf.to_excel(excelObj,sheet_name='Investigation Data', header=False, index=False,startrow=1)
+    inv_data_workbook=excelObj.book
+    notes_worksheet = inv_data_workbook.add_worksheet('Notes')
+    notes_worksheet.write('A1','Created:')
+    
+    notes_worksheet.set_column(1,1,len(str(datetime.datetime.now())))
+    time_stamp_format = inv_data_workbook.add_format({'num_format': 'mmm d yyyy hh:mm:ss AM/PM'})
+    notes_worksheet.write('B1',datetime.datetime.now(), time_stamp_format)
+    # worksheet.write('A7', number, time_stamp_format) 
     excelObj.close()
     
 
