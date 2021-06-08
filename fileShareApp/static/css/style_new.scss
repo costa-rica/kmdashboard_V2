@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;0,900;1,300&display=swap');
 body {
     background: rgb(175, 175, 175);
     margin: 0;
@@ -105,8 +105,6 @@ section.RegisterSection {
             "confirm_password-label confirm_password-input ."
             ". form-submit .";
         }
-
-
 
         .email-label {
             grid-area: email-label;
@@ -276,7 +274,6 @@ section.search {
 
 /*Dashboard*/
 section.dashboard {
-    
     h2 {
         margin: 20px 0 0 20px;
     }
@@ -295,7 +292,6 @@ section.dashboard {
         padding-bottom:2em;
     }    
   
-
     .investigation_entry_top {
         display: grid;
         grid-template-columns: repeat(auto-fit,minmax(23rem, 1fr));
@@ -318,28 +314,24 @@ section.dashboard {
         }
     }
 
-
     .inv_subject {
         display: flex;
         padding-bottom:5px;
         label { width: 15%}
         input {width: 85%}
     }
-    
     .inv_summary {
         display: flex;
         padding-bottom:5px;
         label {width:15%}
         textarea {width:85%}
     }
-    
     .inv_km_notes {
         display: flex;
         padding-bottom:5px;
         label {width:15%;}
         textarea {width:85%;}
             }
-
     .investigation_entery_bottom {
         display: grid;
         grid-template-rows: 1fr;
@@ -349,14 +341,12 @@ section.dashboard {
         "inv_update"
         "inv_date_update";
     }
-
     .inv_files {grid-area: inv_files;
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
         height: 10em;
         padding-left: 20px;
-
         .file_input {
             padding: 10px 0 0 0;
         }
@@ -397,7 +387,6 @@ section.dashboard {
         border-color:rgb(82, 82, 82);
         border-style: solid;
         border-radius: 1em;
-
     }
     .km_categories_checkboxes{
         display: grid;
@@ -405,18 +394,15 @@ section.dashboard {
     }
     .checkbox_group {
         display:flex;
-        
     }
     .checkbox_group > label {
         text-align: left;
     }
-
     .inv_update {
         grid-area: inv_update;
         justify-self: end;
         display: flex;
         flex-direction: column;
-
     }
     .update_inv {
         height: 30px;
@@ -433,13 +419,10 @@ section.dashboard {
         height: 25px;
         margin-right: .3em;
     }
-
-
     .inv_date_update {grid-area: inv_date_update;
         display: flex;
         justify-content: flex-end;
     }
-    
     .span_text {
         color: rgb(130,130,130);
     }
@@ -449,7 +432,27 @@ section.dashboard {
         justify-content: flex-end;
         text-align: right;
         margin-bottom: 5px;
-        
     }
 }
 
+/*Reports*/
+.download_group {
+    background: tan;
+    padding: .5em;
+    border-color:rgb(82, 82, 82);
+    border-style: solid;
+    border-radius: 1em;
+    margin-bottom: 1em;
+    
+}
+.download_group_inputs {
+    padding-left:2em;
+}
+.timestamp_group {
+    float: right;
+    margin-right: 5em;
+}
+.timestamp_input {
+    background:rgb(175, 175, 175);
+    text-align:center;
+}

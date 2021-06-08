@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;1,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;0,900;1,300&display=swap");
 body {
   background: #afafaf;
   margin: 0;
@@ -634,5 +634,29 @@ section.dashboard label {
           justify-content: flex-end;
   text-align: right;
   margin-bottom: 5px;
+}
+
+/*Reports*/
+.download_group {
+  background: tan;
+  padding: .5em;
+  border-color: #525252;
+  border-style: solid;
+  border-radius: 1em;
+  margin-bottom: 1em;
+}
+
+.download_group_inputs {
+  padding-left: 2em;
+}
+
+.timestamp_group {
+  float: right;
+  margin-right: 5em;
+}
+
+.timestamp_input {
+  background: #afafaf;
+  text-align: center;
 }
 /*# sourceMappingURL=style_new.css.map */

@@ -1,12 +1,12 @@
 from flask import Blueprint
-from flask import render_template, url_for, redirect, flash, request, abort, session,\
-    Response, current_app, send_from_directory
+# from flask import render_template, url_for, redirect, flash, request, abort, session,\
+    # Response, current_app, send_from_directory
 from fileShareApp import db, bcrypt, mail
 from fileShareApp.models import Post, User, Investigations, Kmtracking
 # from fileShareApp.main.forms import EmployeeForm, AddRestaurantForm, DatabaseForm, AddRoleForm
 from flask_login import login_user, current_user, logout_user, login_required
 import secrets
-import os
+# import os
 from PIL import Image
 from datetime import datetime, date, time
 import datetime
@@ -17,17 +17,22 @@ from wsgiref.util import FileWrapper
 import xlsxwriter
 from flask_mail import Message
 from fileShareApp.main.utils import investigations_query_util, queryToDict, search_criteria_dictionary_util,\
-    updateInvestigation
+    updateInvestigation, create_categories_xlsx
 # from fileShareApp.dmr.utils
+from fileShareApp.main.utils2 import create_categories_xlsx2
 import openpyxl
 from werkzeug.utils import secure_filename
 import json
 import glob
 import shutil
-import logging
+
 
 from fileShareApp.users.forms import RegistrationForm, LoginForm, UpdateAccountForm, \
     RequestResetForm, ResetPasswordForm
+
+import logging
+
+logging.basicConfig(filename='main_route_log.txt', level=logging.DEBUG)
 
 main = Blueprint('main', __name__)
 
@@ -227,12 +232,13 @@ def dashboard():
     
     
     if request.method == 'POST':
-        print('!!!!in POST method')
+        
         formDict = request.form.to_dict()
         argsDict = request.args.to_dict()
         filesDict = request.files.to_dict()
         
         if formDict.get('update_inv'):
+            current_app.logger.info('update investigation button pressed')
             updateInvestigation(formDict, inv_id_for_dash=inv_id_for_dash, verified_by_list=verified_by_list)
 
             if request.files.get('investigation_file'):
@@ -304,20 +310,50 @@ def delete_file(inv_id_for_dash,filename):
 @main.route("/reports", methods=["GET","POST"])
 @login_required
 def reports():
-    return render_template('reports.html')
+    excel_file_name='investigation_categories_report.xlsx'
+    if request.method == 'POST':
+        formDict = request.form.to_dict()
+        print('formDict::::',formDict)
+        if formDict.get('build_excel_report'):
+            print('in build_excel_report')
+            
+            # excelObj=pd.ExcelWriter(os.path.join(
+                # current_app.config['UTILITY_FILES_FOLDER'],excel_file_name))
+            # print('in build_excel_report  utility')
+            # columnNames=Investigations.__table__.columns.keys()
+            # colNamesDf=pd.DataFrame([columnNames],columns=columnNames)
+            # colNamesDf.to_excel(excelObj,sheet_name='Investigation Data', header=False, index=False)
+            # print('added column names')
+
+            # queryDf = pd.read_sql_table('investigations', db.engine)
+            # queryDf.to_excel(excelObj,sheet_name='Investigation Data', header=False, index=False,startrow=1)
+            # print('added database data')
+            # inv_data_workbook=excelObj.book
+            # notes_worksheet = inv_data_workbook.add_worksheet('Notes')
+            # notes_worksheet.write('A1','Created:')
+            # print('wrote some stuff')
+            # notes_worksheet.set_column(1,1,len(str(datetime.datetime.now())))
+            # time_stamp_format = inv_data_workbook.add_format({'num_format': 'mmm d yyyy hh:mm:ss AM/PM'})
+            # notes_worksheet.write('B1',datetime.datetime.now(), time_stamp_format)
+            # excelObj.close()
+            print('folder path in route:::', type(os.path.join(
+                current_app.config['UTILITY_FILES_FOLDER'],excel_file_name)))
+            create_categories_xlsx('investigation_categories_report.xlsx')
+        return redirect(url_for('main.reports'))
+    return render_template('reports.html', excel_file_name=excel_file_name)
 
 
 
 @main.route("/files_zip", methods=["GET","POST"])
 @login_required
 def files_zip():
-    current_app.logger.info('Enter files download utility')
+
     if os.path.exists(os.path.join(current_app.config['UTILITY_FILES_FOLDER'],'Investigation_files')):
         os.remove(os.path.join(current_app.config['UTILITY_FILES_FOLDER'],'Investigation_files'))
     shutil.make_archive(os.path.join(
         current_app.config['UTILITY_FILES_FOLDER'],'Investigation_files'), "zip", os.path.join(
         current_app.config['UPLOADED_FILES_FOLDER']))
-    current_app.logger.info('succesfully downloaded files zip')
+
     return send_from_directory(os.path.join(
         current_app.config['UTILITY_FILES_FOLDER']),'Investigation_files.zip', as_attachment=True)
 
@@ -325,42 +361,10 @@ def files_zip():
 @main.route("/investigation_categories", methods=["GET","POST"])
 @login_required
 def investigation_categories():
-    current_app.logger.info('Entered investigations download utility')
-    
-    excelObj=pd.ExcelWriter(os.path.join(
-        current_app.config['UTILITY_FILES_FOLDER'],'investigation_categories_report.xlsx'))
+    excel_file_name=request.args.get('excel_file_name')
 
-    columnNames=Investigations.__table__.columns.keys()
-    colNamesDf=pd.DataFrame([columnNames],columns=columnNames)
-    colNamesDf.to_excel(excelObj,sheet_name='Investigation Data', header=False, index=False)
-    
-
-    queryDf = pd.read_sql_table('investigations', db.engine)
-    queryDf.to_excel(excelObj,sheet_name='Investigation Data', header=False, index=False,startrow=1)
-    inv_data_workbook=excelObj.book
-    notes_worksheet = inv_data_workbook.add_worksheet('Notes')
-    notes_worksheet.write('A1','Created:')
-    
-    notes_worksheet.set_column(1,1,len(str(datetime.datetime.now())))
-    time_stamp_format = inv_data_workbook.add_format({'num_format': 'mmm d yyyy hh:mm:ss AM/PM'})
-    notes_worksheet.write('B1',datetime.datetime.now(), time_stamp_format)
-    # worksheet.write('A7', number, time_stamp_format) 
-    excelObj.close()
-    
-
-    
-    # df = pd.read_sql_table('investigations', db.engine)
-    # df_1=df[['id', 'NHTSA_ACTION_NUMBER', 'MAKE', 'MODEL', 'YEAR', 'COMPNAME',
-       # 'MFR_NAME', 'ODATE', 'CDATE', 'CAMPNO', 'SUBJECT', 'date_updated', 'files', 'checkbox_0', 'checkbox_1',
-       # 'checkbox_2', 'checkbox_3', 'checkbox_4', 'textbox_1', 'textbox_2',
-       # 'textbox_3', 'textbox_4']].copy()
-    # df_1.to_csv(os.path.join(
-        # current_app.config['UTILITY_FILES_FOLDER'],'investigation_categories_report.csv'))
-        
-        
-    current_app.logger.info('succesfully downloaded categories spreadsheet')
     return send_from_directory(os.path.join(
-        current_app.config['UTILITY_FILES_FOLDER']),'investigation_categories_report.xlsx', as_attachment=True)
+        current_app.config['UTILITY_FILES_FOLDER']),excel_file_name, as_attachment=True)
 
 
 

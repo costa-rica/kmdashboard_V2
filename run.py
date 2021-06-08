@@ -1,13 +1,14 @@
 from fileShareApp import create_app
-import logging
+from logging import FileHandler, DEBUG
+
+file_handler = FileHandler('run_error_log.txt')
+file_handler.setLevel(DEBUG)
+
 
 app = create_app()
 
+app.logger.addHandler(file_handler)
 
-if __name__ != '__main__':
-    gunicorn_logger = logging.getLogger('gunicorn.error')
-    app.logger.handlers = gunicorn_logger.handlers
-    app.logger.setLevel(gunicorn_logger.level)
 
 if __name__ == "__main__":
     app.run()

@@ -5,7 +5,9 @@ from flask import current_app
 import json
 from datetime import date, datetime
 from flask_login import current_user
-
+import pandas as pd
+import openpyxl
+import xlsxwriter
 
 def queryToDict(query_data, column_names):
     db_row_list =[]
@@ -148,14 +150,37 @@ def updateInvestigation(dict, **kwargs):
             db.session.commit()
             
     if at_least_one_field_changed:
-        current_app.logger.info('End updateInvestigation util',at_least_one_field_changed)
+
         # print('at_least_one_field_changed::::',at_least_one_field_changed)
         setattr(existing_data, 'date_updated' ,datetime.now())
         db.session.commit()
     if date_flag:
         flash(date_flag, 'warning')
-    current_app.logger.info('End updateInvestigation util')
-    # print('end updateInvestigation util')
-        #if there is a corresponding update different from existing_data:
-        #1.add row to kmtracking datatable
-        #2.update existing_data with change       
+
+    return print('end')
+
+
+def create_categories_xlsx(excel_file_name):
+    print('in build_excel_report  utility')
+    print('folder path in util:::', type(os.path.join(
+        current_app.config['UTILITY_FILES_FOLDER'],excel_file_name)))
+    # excelObj=pd.ExcelWriter(os.path.join(
+        # current_app.config['UTILITY_FILES_FOLDER'],excel_file_name))
+    excelObj=pd.ExcelWriter(excel_file_name)
+    print('in build_excel_report  utility')
+    columnNames=Investigations.__table__.columns.keys()
+    colNamesDf=pd.DataFrame([columnNames],columns=columnNames)
+    colNamesDf.to_excel(excelObj,sheet_name='Investigation Data', header=False, index=False)
+    print('added column names')
+
+    queryDf = pd.read_sql_table('investigations', db.engine)
+    queryDf.to_excel(excelObj,sheet_name='Investigation Data', header=False, index=False,startrow=1)
+    print('added database data')
+    inv_data_workbook=excelObj.book
+    notes_worksheet = inv_data_workbook.add_worksheet('Notes')
+    notes_worksheet.write('A1','Created:')
+    print('wrote some stuff')
+    notes_worksheet.set_column(1,1,len(str(datetime.datetime.now())))
+    time_stamp_format = inv_data_workbook.add_format({'num_format': 'mmm d yyyy hh:mm:ss AM/PM'})
+    notes_worksheet.write('B1',datetime.datetime.now(), time_stamp_format)
+    excelObj.close()

@@ -17,3 +17,15 @@ def error_403(error):
 @errors.app_errorhandler(500)
 def error_500(error):
 	return render_template('errors/500.html'), 500
+
+@errors.app_errorhandler(502)
+def error_502(error):
+	return render_template('errors/502.html'), 502
+    
+@errors.app_errorhandler(504)
+def error_504(error):
+	return render_template('errors/504.html'), 504
+
+@errors.app_errorhandler(Exception)
+def unhandled_exception(error):
+	return render_template('errors/504.html'), 504
