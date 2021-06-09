@@ -24,14 +24,20 @@ from werkzeug.utils import secure_filename
 import json
 import glob
 import shutil
+import xlrd
 
 from fileShareApp.users.forms import RegistrationForm, LoginForm, UpdateAccountForm, \
     RequestResetForm, ResetPasswordForm
 
 import logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+file_handler = logging.FileHandler('fileShareApp_main_log.txt')
+logger.addHandler(file_handler)
 
-file_handler = logging.FileHandler('main_route_error_log.txt')
-file_handler.setLevel(logging.DEBUG)
+
+# this_app = create_app()
+# this_app.logger.addHandler(file_handler)
 
 main = Blueprint('main', __name__)
 
@@ -44,7 +50,7 @@ def home():
 @login_required
 def search():
     print('*TOP OF def search()*')
-
+    logger.info('in search page')
 
 
     column_names=['id','NHTSA_ACTION_NUMBER', 'MAKE','MODEL','YEAR','COMPNAME','MFR_NAME',
@@ -310,43 +316,32 @@ def delete_file(inv_id_for_dash,filename):
 @login_required
 def reports():
     excel_file_name='investigation_categories_report.xlsx'
+    if os.path.exists(os.path.join(
+        current_app.config['UTILITY_FILES_FOLDER'],excel_file_name)):
+        # Read Excel and turn entire sheet to a df
+        time_stamp_df = pd.read_excel(os.path.join(
+            current_app.config['UTILITY_FILES_FOLDER'],excel_file_name),
+            'Notes',header=None)
+        time_stamp = time_stamp_df.loc[0,1].to_pydatetime().strftime("%Y-%m-%d %I:%M:%S %p")
+    else:
+        time_stamp='no current file'
+
+    print('time_stamp_df:::', time_stamp, type(time_stamp))
     if request.method == 'POST':
         formDict = request.form.to_dict()
         print('formDict::::',formDict)
         if formDict.get('build_excel_report'):
-            print('in build_excel_report')
-            
-            # excelObj=pd.ExcelWriter(os.path.join(
-                # current_app.config['UTILITY_FILES_FOLDER'],excel_file_name))
-            # print('in build_excel_report  utility')
-            # columnNames=Investigations.__table__.columns.keys()
-            # colNamesDf=pd.DataFrame([columnNames],columns=columnNames)
-            # colNamesDf.to_excel(excelObj,sheet_name='Investigation Data', header=False, index=False)
-            # print('added column names')
 
-            # queryDf = pd.read_sql_table('investigations', db.engine)
-            # queryDf.to_excel(excelObj,sheet_name='Investigation Data', header=False, index=False,startrow=1)
-            # print('added database data')
-            # inv_data_workbook=excelObj.book
-            # notes_worksheet = inv_data_workbook.add_worksheet('Notes')
-            # notes_worksheet.write('A1','Created:')
-            # print('wrote some stuff')
-            # notes_worksheet.set_column(1,1,len(str(datetime.datetime.now())))
-            # time_stamp_format = inv_data_workbook.add_format({'num_format': 'mmm d yyyy hh:mm:ss AM/PM'})
-            # notes_worksheet.write('B1',datetime.datetime.now(), time_stamp_format)
-            # excelObj.close()
-            print('folder path in route:::', type(os.path.join(
-                current_app.config['UTILITY_FILES_FOLDER'],excel_file_name)))
             create_categories_xlsx('investigation_categories_report.xlsx')
+            logger.info('in search page')
         return redirect(url_for('main.reports'))
-    return render_template('reports.html', excel_file_name=excel_file_name)
+    return render_template('reports.html', excel_file_name=excel_file_name, time_stamp=time_stamp)
 
 
 
 @main.route("/files_zip", methods=["GET","POST"])
 @login_required
 def files_zip():
-
     if os.path.exists(os.path.join(current_app.config['UTILITY_FILES_FOLDER'],'Investigation_files')):
         os.remove(os.path.join(current_app.config['UTILITY_FILES_FOLDER'],'Investigation_files'))
     shutil.make_archive(os.path.join(

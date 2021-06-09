@@ -7,8 +7,10 @@ from fileShareApp.config import Config
 from flask_migrate import Migrate
 
 
+import logging
+
 db = SQLAlchemy()
-# migrate = Migrate()
+
 bcrypt = Bcrypt()
 login_manager= LoginManager()
 login_manager.login_view = 'users.login'
@@ -18,21 +20,23 @@ mail = Mail()
 #application factory
 def create_app(config_class=Config):
     app = Flask(__name__)
+    
+    file_handler = logging.FileHandler('fileShareApp_log.txt')
+    file_handler.setLevel(logging.DEBUG)
+    app.logger.addHandler(file_handler)
+    
     app.config.from_object(Config)
 
     db.init_app(app)
-    # migrate.init_app(app,db)
     bcrypt.init_app(app)
     login_manager.init_app(app)
     mail.init_app(app)
 
-    # from fileShareApp import routes #this has to be done after the app=Flask(__name__) instance
-    # from fileShareApp.dmr.routes import dmr
+
     from fileShareApp.main.routes import main
-    from fileShareApp.buckets.routes import buckets#posts
+    from fileShareApp.buckets.routes import buckets
     from fileShareApp.users.routes import users
     from fileShareApp.errors.handlers import errors
-    # app.register_blueprint(dmr)
     app.register_blueprint(main)
     app.register_blueprint(buckets)
     app.register_blueprint(users)
