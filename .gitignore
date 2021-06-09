@@ -4,3 +4,4 @@ fileShareApp/__pycache__/
 *.zip
 *.xlsx
 awsVmSockMethod/
+*log.txt
